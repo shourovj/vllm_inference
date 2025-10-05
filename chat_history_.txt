@@ -1,0 +1,8 @@
+vLLM Inference Chat History
+==================================================
+
+Conversation 1:
+User: Extract all the medicine informations in a structured json format
+Assistant: Error processing request: can only concatenate str (not "list") to str
+------------------------------
+

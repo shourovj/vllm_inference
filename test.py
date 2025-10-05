@@ -20,7 +20,7 @@ client = openai.OpenAI(
 
 
 # 2. Define the path to your image and encode it
-image_path = "/mnt/storage1/shourovj/vllm_inference/pres_images/1701847716rx_CC01S_2023-12-06-13-28-36 (1).webp"
+image_path = "/mnt/storage1/shourovj/vllm_inference/pres_images/1701859263rx_G0B2N_2023-12-06-12-45-21.webp"
 base64_image_uri = encode_image_to_base64(image_path)
 
 

@@ -1,0 +1,60 @@
+# Backend Dockerfile for vLLM server
+FROM nvidia/cuda:12.4.1-runtime-ubuntu22.04
+
+# Set environment variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+ENV CUDA_VISIBLE_DEVICES=0
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    python3 \
+    python3-pip \
+    python3-dev \
+    git \
+    wget \
+    curl \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create symbolic link for python
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements first for better caching
+COPY requirements.docker.txt .
+
+# Install Python dependencies
+RUN pip3 install --no-cache-dir -r requirements.docker.txt
+
+# Copy application files
+COPY . .
+
+# Create startup script
+RUN echo '#!/bin/bash\n\
+echo "Starting vLLM server..."\n\
+python -m vllm.entrypoints.openai.api_server \\\n\
+  --model Qwen/Qwen2.5-VL-3B-Instruct \\\n\
+  --port 8801 \\\n\
+  --host 0.0.0.0 \\\n\
+  --max-model-len 2048 \\\n\
+  --gpu-memory-utilization 0.5 \\\n\
+  --max-model-len 1024 \\\n\
+  --max-num-seqs 32 \\\n\
+  --max-num-batched-tokens 2048 \\\n\
+  --kv-cache-dtype auto \\\n\
+  --disable-log-stats \\\n\
+  --trust-remote-code\n\
+' > start_vllm.sh && chmod +x start_vllm.sh
+
+# Expose port
+EXPOSE 8801
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD curl -f http://localhost:8801/v1/models || exit 1
+
+# Start vLLM server
+CMD ["./start_vllm.sh"]

@@ -1,0 +1,21 @@
+# Exclude large files from Docker build context
+# pres_images/
+*.webp
+*.jpg
+*.png
+*.jpeg
+chat_history_*.txt
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.git/
+.gitignore
+*.log
+.DS_Store
+Thumbs.db
+# pres_images/
