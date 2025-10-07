@@ -23,8 +23,8 @@ python -m vllm.entrypoints.openai.api_server \
   --model Qwen/Qwen2.5-VL-3B-Instruct \
   --port 8801 \
   --host 0.0.0.0 \
-  --max-model-len 2048 \
-  --gpu-memory-utilization 0.9 \
+  --max-model-len 1024 \
+  --gpu-memory-utilization 0.3 \
   --trust-remote-code \
   --served-model-name Qwen/Qwen2.5-VL-3B-Instruct
 
